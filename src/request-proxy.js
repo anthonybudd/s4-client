@@ -28,11 +28,10 @@ module.exports = (onionAddress, options) => {
         var method = req.method.toUpperCase();
 
         options.url = onionAddress + req.url;
-        console.log(options.url)
 
         if (!req.ext) req.ext = {};
 
-        req.ext.requestHandler = 'express-request-proxy';
+        req.ext.requestHandler = 's4-client';
 
         return makeApiCall(req, res, next);
     };
@@ -48,13 +47,12 @@ module.exports = (onionAddress, options) => {
 
         apiRequestOptions.agent = tr.createAgent();
 
-        console.log('making %s call to %s', apiRequestOptions.method, apiRequestOptions.url);
+        if (process.env.DEBUG === 'true') console.log(`* ${apiRequestOptions.method} - ${apiRequestOptions.url}`);
 
         // If the req has a body, pipe it into the proxy request
         var apiRequest;
         var originalApiRequest;
         if (is.hasBody(req)) {
-            console.log('piping req body to remote http endpoint');
             originalApiRequest = request(apiRequestOptions);
             apiRequest = req.pipe(originalApiRequest);
         } else {

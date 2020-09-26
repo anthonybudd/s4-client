@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').load();
 const http = require('http');
 const express = require('express');
 const torRequestProxy = require('./request-proxy');
